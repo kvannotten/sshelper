@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Sshelper::VERSION
   spec.authors       = ["Kristof Vannotten"]
   spec.email         = ["kristof@vannotten.be"]
-  spec.description   = %q{Small application that helps you doing to automate mundane, remote tasks}
-  spec.summary       = %q{Small application that helps you doing to automate mundane, remote tasks}
+  spec.description   = %q{Small application that helps you to automate mundane, remote tasks}
+  spec.summary       = %q{Small application that helps you to automate mundane, remote tasks}
   spec.homepage      = ""
   spec.license       = "MIT"
 
