@@ -1,3 +1,27 @@
 #!/usr/bin/env ruby
 
 require 'sshelper'
+require 'optparse'
+
+Sshelper.prepare!
+
+options = {}
+ 
+global = OptionParser.new do |opts|
+  opts.banner = "Usage: sshelper [your_label]\n\n"
+end
+
+subcommands = {}
+
+Sshelper.configuration.each do |key, value|
+  subcommands[key.to_s] = OptionParser.new do |opts|
+    opts.banner = "Usage: #{key.to_s}"
+  end
+end
+
+global.order!
+command = ARGV.shift
+puts global if command.nil?
+subcommands[command].order! if subcommands.member? command
+
+Sshelper.execute_label command
