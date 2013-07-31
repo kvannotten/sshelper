@@ -1,8 +1,11 @@
 require "sshelper/version"
 require "sshelper/hash"
+require "sshelper/string"
 require "net/ssh"
+require "net/ssh/telnet"
 require "json"
 require "fileutils"
+require "socket"
 
 module Sshelper
   @config
@@ -37,22 +40,18 @@ module Sshelper
     
     @config[label].servers.each do |server|
       port = (server.include?("port") ? server.port : 22)
-      Net::SSH.start(server.host, server.user, :port => port) do |ssh|
-        cd_cmd = nil
-        @config[label].commands.each do |command|
-          puts "Executing #{command} on #{server.host}"
-          if command.start_with? "cd " then
-            cd_cmd = command
-            next
-          end
-          cmds = []
-          cmds << cd_cmd unless cd_cmd.nil?
-          cmds << command
-          puts ssh.exec!(cmds.join(' && '))
-        end
+      ssh = Net::SSH.start(server.host, server.user, :port => port)
+      s = Net::SSH::Telnet.new("Session" => ssh)
+      puts "Logged in".pink
+      @config[label].commands.each do |command|
+        puts "\nExecuting: #{command}".red
+        puts '#### OUTPUT ####'.blue
+        puts "#{s.cmd(command).split("\n").join("\n ~> ")}"
+        puts '#### END ####'.blue
       end
-    end
-    
+      s.close
+      ssh.close
+    end   
   end
   
   def self.configuration

@@ -4,6 +4,8 @@ require 'sshelper'
 require 'optparse'
 require 'fileutils'
 
+trap("SIGINT") { puts "\nExiting...\n"; exit! }
+
 options = {}
  
 global = OptionParser.new do |opts|
