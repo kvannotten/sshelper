@@ -16,6 +16,10 @@ Install it as follows:
 After installation, you will have to create a '.sshelper.json' file in your home directory:
 
     $ touch ~/.sshelper.json
+
+Or, you can use the built in functionality to generate a template:
+
+    $ sshelper -t
     
 Open it in your favorite editor:
 
@@ -25,6 +29,7 @@ And use the following structure to add labels:
 ```
 {
   "my_label1": {
+    "description": "View the content of the newest file on example.org and test.com",
     "servers": [
         {
           "host": "example.org",
@@ -43,6 +48,7 @@ And use the following structure to add labels:
       ]
   },
   "my_label2": {
+    "description": "List 1 file on example.org"
     "servers": [
         {
           "host": "example.org",
@@ -64,6 +70,10 @@ After you have added a configuration file with labels, servers and commands, you
     
 This will execute all commands defined under "my_label1" on all servers defined under that same block! Talking about
 enhancing your workflow...
+
+To list all the labels you have defined, you can do:
+
+    $ sshelper -l
 
 ## Contributing
 
