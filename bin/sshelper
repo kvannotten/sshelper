@@ -2,14 +2,35 @@
 
 require 'sshelper'
 require 'optparse'
-
-Sshelper.prepare!
+require 'fileutils'
 
 options = {}
  
 global = OptionParser.new do |opts|
   opts.banner = "Usage: sshelper [your_label]\n\n"
+  opts.on("-l", "--labels", "Show all labels") do
+    puts "Usage: sshelper [your_label]\n\n"
+    puts "Labels:"
+    Sshelper.prepare!
+    Sshelper.configuration.each do |key, value|
+      puts "\t#{key.to_s}: #{value.description}"
+    end
+    puts "\n\n"
+    exit!
+  end
+  
+  opts.on("-t", "--template", "Place a template configuration at ~/.sshelper.json") do
+    template = IO.read(File.expand_path('../../resources/template.json', __FILE__))
+    File.open(File.expand_path("~/.sshelper.json"), "w") { |f| f.write template }
+    exit!
+  end
 end
+
+global.order!
+command = ARGV.shift
+puts global if command.nil?
+
+Sshelper.prepare!
 
 subcommands = {}
 
@@ -19,9 +40,6 @@ Sshelper.configuration.each do |key, value|
   end
 end
 
-global.order!
-command = ARGV.shift
-puts global if command.nil?
 subcommands[command].order! if subcommands.member? command
 
 Sshelper.execute_label command
