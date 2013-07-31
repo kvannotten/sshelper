@@ -38,8 +38,17 @@ module Sshelper
     @config[label].servers.each do |server|
       port = (server.include?("port") ? server.port : 22)
       Net::SSH.start(server.host, server.user, :port => port) do |ssh|
+        cd_cmd = nil
         @config[label].commands.each do |command|
-          puts ssh.exec!(command)
+          puts "Executing #{command} on #{server.host}"
+          if command.start_with? "cd " then
+            cd_cmd = command
+            next
+          end
+          cmds = []
+          cmds << cd_cmd unless cd_cmd.nil?
+          cmds << command
+          puts ssh.exec!(cmds.join(' && '))
         end
       end
     end
