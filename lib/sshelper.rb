@@ -1,11 +1,9 @@
 require "sshelper/version"
 require "sshelper/hash"
 require "sshelper/string"
-require "net/ssh"
-require "net/ssh/telnet"
+require 'rye'
 require "json"
 require "fileutils"
-require "socket"
 
 module Sshelper
   @config
@@ -40,18 +38,21 @@ module Sshelper
     
     @config[label].servers.each do |server|
       port = (server.include?("port") ? server.port : 22)
-      ssh = Net::SSH.start(server.host, server.user, :port => port)
-      s = Net::SSH::Telnet.new("Session" => ssh)
-      puts "Logged in".pink
+      puts "Creating SSH session on #{server.host}...".pink
+      rbox = Rye::Box.new( server.host, :user => server.user, :port => port, :safe => false )
+      
+      puts "Logged in! Executing commands...".pink
       @config[label].commands.each do |command|
         puts "\nExecuting: #{command}".red
         puts '#### OUTPUT ####'.blue
-        puts "#{s.cmd(command).split("\n").join("\n ~> ")}"
+        if command.start_with? "cd" then
+          rbox.cd command.split(' ', 2).last
+        else
+          puts "#{rbox.execute(command).stdout.map{ |k| "~> #{k}" }.join("\n") }"
+        end
         puts '#### END ####'.blue
       end
-      s.close
-      ssh.close
-    end   
+    end 
   end
   
   def self.configuration
