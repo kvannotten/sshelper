@@ -1,24 +1,69 @@
 # Sshelper
 
-TODO: Write a gem description
+This gem is supposed to make your life easier if you have to do a lot of repetitive tasks over SSH. If you are sick 
+of doing the constant ```ssh user@example.org```, ```cd /opt/path/to/something```, ```./start.sh``` 
+etc, then this tool is for you!
+
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'sshelper'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Install it as follows:
 
     $ gem install sshelper
 
 ## Usage
 
-TODO: Write usage instructions here
+After installation, you will have to create a '.sshelper.json' file in your home directory:
+
+    $ touch ~/.sshelper.json
+    
+Open it in your favorite editor:
+
+    $ nano ~/.sshelper.json
+    
+And use the following structure to add labels:
+```
+{
+  "my_label1": {
+    "servers": [
+        {
+          "host": "example.org",
+          "port": 22,
+          "user": "root"
+        },
+        {
+          "host": "test.com",
+          "port": 1234,
+          "user": "eddy"
+        }
+      ],
+    "commands": [
+        "ls -l",
+        "cat `ls -1rt | tail -1`"
+      ]
+  },
+  "my_label2": {
+    "servers": [
+        {
+          "host": "example.org",
+          "port": 22,
+          "user": "root"
+        }
+      ],
+    "commands": [
+        "ls -1"
+      ]
+  }
+}
+
+```
+
+After you have added a configuration file with labels, servers and commands, you can do stuff like this:
+
+    $ sshelper my_label1
+    
+This will execute all commands defined under "my_label1" on all servers defined under that same block! Talking about
+enhancing your workflow...
 
 ## Contributing
 
