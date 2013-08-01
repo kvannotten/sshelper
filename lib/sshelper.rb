@@ -3,18 +3,32 @@ require "sshelper/hash"
 require "sshelper/string"
 require 'rye'
 require "json"
+require "yaml"
 require "fileutils"
 
 module Sshelper
   @config
   
   def self.prepare!
-    raise "Needs configuration file" unless File.exists? File.expand_path("~/.sshelper.json")
+    @config ||= {}
+    if File.exists? File.expand_path("~/.sshelper.json") then
+      begin 
+        @config.merge! JSON.parse IO.read(File.expand_path("~/.sshelper.json"))
+      rescue
+        puts "An error occurred while parsing your JSON configuration."
+      end
+    end
     
-    begin 
-      @config ||= JSON.parse IO.read(File.expand_path("~/.sshelper.json"))
-    rescue
-      puts "An error occurred while parsing your configuration file."
+    if File.exists? File.expand_path("~/.sshelper.yml") then
+      begin 
+        @config.merge! YAML.load_file File.expand_path("~/.sshelper.yml")
+      rescue
+        puts "An error occurred while parsing your yaml configuration."
+      end
+    end
+    
+    if @config.empty? then
+      puts "Your configuration is empty, make sure you have a ~/.sshelper.json and/or a ~/.sshelper.yml config file"
     end
   end
   
@@ -22,17 +36,17 @@ module Sshelper
     return if label.nil?
     labels = @config.map { |key, value| key }
     if not labels.include? label then
-      puts "Could not find that label."
+      puts "Could not find that label.".yellow
       return
     end
     
     if not @config[label].include? "servers" or not @config[label].include? "commands" then
-      puts "The configuration file does not contain a 'servers' array or a 'commands' array"
+      puts "The configuration file does not contain a 'servers' array or a 'commands' array".yellow
       return
     end
     
     if not @config[label].servers.is_a? Array or not @config[label].commands.is_a? Array then
-      puts "The servers and commands block need to be arrays."
+      puts "The servers and commands block need to be arrays.".yellow
       return
     end
     
@@ -45,7 +59,7 @@ module Sshelper
       @config[label].commands.each do |command|
         puts "\nExecuting: #{command}".red
         puts '#### OUTPUT ####'.blue
-        if command.start_with? "cd" then
+        if command.start_with? "cd " then
           rbox.cd command.split(' ', 2).last
         else
           puts "#{rbox.execute(command).stdout.map{ |k| "~> #{k}" }.join("\n") }"
