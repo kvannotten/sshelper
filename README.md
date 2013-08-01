@@ -1,4 +1,4 @@
-# Sshelper
+# SSHelper
 
 This gem is supposed to make your life easier if you have to do a lot of repetitive tasks over SSH. If you are sick 
 of doing the constant ```ssh user@example.org```, ```cd /opt/path/to/something```, ```./start.sh``` 
