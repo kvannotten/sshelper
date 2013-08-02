@@ -1,0 +1,9 @@
+my_label1:
+  description: Some description
+  servers:
+    - host: my.host.com
+      port: 22
+      user: my_user
+  commands:
+    - cd /opt
+    - ls -l

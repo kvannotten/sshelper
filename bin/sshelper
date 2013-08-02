@@ -21,9 +21,12 @@ global = OptionParser.new do |opts|
     exit!
   end
   
-  opts.on("-t", "--template", "Place a template configuration at ~/.sshelper.json") do
-    template = IO.read(File.expand_path('../../resources/template.json', __FILE__))
-    File.open(File.expand_path("~/.sshelper.json"), "w") { |f| f.write template }
+  opts.on("-t", "--template [TYPE]", "Generate a template in your home folder (~/.sshelper.{yml|json}). For type choose either YAML/YML or JSON.") do |type|
+    ext = "json"
+    ext = "yml" if type.downcase =~ /ya?ml/
+      
+    template = IO.read(File.expand_path("../../resources/template.#{ext}", __FILE__))
+    File.open(File.expand_path("~/.sshelper.#{ext}"), "w") { |f| f.write template }
     exit!
   end
 end
