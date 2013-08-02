@@ -15,7 +15,7 @@ global = OptionParser.new do |opts|
     puts "Labels:"
     Sshelper.prepare!
     Sshelper.configuration.each do |key, value|
-      puts "\t#{key.to_s}: #{value.description}"
+      puts "\t#{key.to_s.yellow}: #{value.description.blue if value.member? 'description'}"
     end
     puts "\n\n"
     exit!
