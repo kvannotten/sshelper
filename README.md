@@ -19,13 +19,36 @@ After installation, you will have to create a '.sshelper.json' file in your home
 
 Or, you can use the built in functionality to generate a template:
 
-    $ sshelper -t
+    $ sshelper -t json
+    # or
+    $ sshelper -t yaml
     
 Open it in your favorite editor:
 
     $ nano ~/.sshelper.json
+    # or
+    $ nano ~/.sshelper.yml
     
 And use the following structure to add labels:
+
+```
+my_label1:
+    description: View the content of the newest file on example.org and test.com
+    servers:
+        - host: example.org
+          port: 22
+          user: root
+        - host: test.com
+          port: 1234
+          user: eddy
+    commands:
+        - ls -l
+        - cat `ls -1rt | tail -1`
+```
+
+
+Or if you prefer JSON:
+
 ```
 {
   "my_label1": {
