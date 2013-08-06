@@ -29,7 +29,7 @@ Open it in your favorite editor:
     # or
     $ nano ~/.sshelper.yml
     
-And use the following structure to add labels:
+And use the following structure to add labels (for YAML):
 
 ```
 my_label1:
@@ -44,6 +44,14 @@ my_label1:
     commands:
         - ls -l
         - cat `ls -1rt | tail -1`
+my_label2:
+    description: List 1 file on example.org
+    servers:
+        - host: example.org
+          port: 22
+          user: root
+    commands:
+        - ls -1
 ```
 
 
@@ -87,6 +95,8 @@ Or if you prefer JSON:
 
 ```
 
+You can also define labels in both JSON and YAML config files. These files will be merged at runtime.
+
 After you have added a configuration file with labels, servers and commands, you can do stuff like this:
 
     $ sshelper my_label1
@@ -94,7 +104,7 @@ After you have added a configuration file with labels, servers and commands, you
 This will execute all commands defined under "my_label1" on all servers defined under that same block! Talking about
 enhancing your workflow...
 
-To list all the labels you have defined, you can do:
+To list all the labels you have defined with their description, you can do:
 
     $ sshelper -l
 
