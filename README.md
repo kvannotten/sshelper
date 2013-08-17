@@ -15,7 +15,7 @@ Install it as follows:
 
 After installation, you will have to create a '.sshelper.json' file in your home directory:
 
-    $ touch ~/.sshelper.json
+    $ touch ~/.sshelper.json # or ~/.sshelper.yml for the YAML format
 
 Or, you can use the built in functionality to generate a template:
 
